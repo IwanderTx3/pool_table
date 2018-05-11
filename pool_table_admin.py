@@ -1,6 +1,9 @@
 import os
 import datetime
 import time
+from colorama import Fore, Style
+import colorama
+
 
 os.system('clear')
 
@@ -11,7 +14,7 @@ cell = 18
 class Table:
     def __init__(self,table_number):
         self.table_number = table_number
-        self.table_status = " NOT OCCUPIED "
+        self.table_status = (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} ')
         self.start_time = '     '
         self.table_start = '     '
         self.display_start = '     '
@@ -42,8 +45,8 @@ def assign_table():
     try:
         active_table = int(input("Select table Number: "))
         i = active_table - 1
-        if tables[i].table_status == ' NOT OCCUPIED ':
-            tables[i].table_status = "   OCCUPIED   "
+        if tables[i].table_status == (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} '):
+            tables[i].table_status = (f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}')
             tables[i].start_time =  datetime.datetime.now()
             tables[i].display_start = tables[i].start_time.strftime('%H:%M')
             #new_time = datetime.datetime.strptime(input('specify time in HH:MM 24h format: '), '%H:%M' ).time()
@@ -52,7 +55,7 @@ def assign_table():
         else:
             print("Table is Occupied.  Please select another table")
             input("Hit enter to continue")
-    except(IndexError):
+    except:
         print("Invailid table number")
         input("Press enter to continue")
 
@@ -60,16 +63,14 @@ def check_out_table():
     try:
         active_table = int(input("Select table Number: "))
         i = active_table - 1
-        if tables[i].table_status == "   OCCUPIED   ":
+        if tables[i].table_status == (f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}'):
             total_charge(i)
-
-            tables[i].table_status = ' NOT OCCUPIED '
-            tables[i].table_start = '     '
-            tables[i].time_played = '      '
+            tables[i].table_status = (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} ')
+            tables[i].display_start = '     '
         else:
             print("Table is Unoccupied.  Please assign the table first.")
             input("Hit enter to continue")
-    except(IndexError):
+    except:
         print("Invailid table number")
         input("Press enter to continue")
 
@@ -80,8 +81,9 @@ def total_charge(i):
     tables[i].time_played =  datetime.datetime.now() - tables[i].start_time
     charge = tables[i].time_played.seconds * (rate/60/60) 
     tables[i].display_played = tables[i].time_played.seconds
-    tables[i].time_played_hours, remainder = divmod(tables[i].display_played, 3600)
-    tables[i].time_played_minutes, seconds = divmod(remainder, 60)
+    tables[i].time_played_hours,  remainder = divmod(tables[i].display_played, 3600)
+    tables[i].time_played_minutes = round(remainder / 60)
+    
 
     os.system('clear')
         
@@ -117,26 +119,50 @@ def total_charge(i):
     f'Total cost:            ${charge:,.2f}\n'
     '_________________________________________\n'
     )
-    
+
 def edit_table_start_time():
-    active_table = int(input("Select table Number: "))
-    i = active_table - 1
-    if tables[i].table_status == "   OCCUPIED   ":
-        new_time = datetime.datetime.strptime(input('specify time in HH:MM 24h format: '), '%H:%M' ).time()
-        tables[i].start_time = datetime.datetime.combine(datetime.date.today(), new_time)
-        tables[i].display_start = str(tables[i].start_time.hour).zfill(2) + ":" + str(tables[i].start_time.minute).zfill(2)
-    else:
-        print("Table is Unoccupied.  Please assign the table first.")
+    try:
+        active_table = int(input("Select table Number: "))
+        i = active_table - 1
+    except(IndexError):
+        print("Invailid table number")
+        input("Press enter to continue")
+    try:
+        if tables[i].table_status ==(f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}'):
+            new_time = datetime.datetime.strptime(input('specify time in HH:MM 24h format: '), '%H:%M' ).time()
+            tables[i].start_time = datetime.datetime.combine(datetime.date.today(), new_time)
+            if tables[i].start_time > datetime.datetime.now():
+                print("Please enter a time in the past.")
+                input("Press enter to continue")
+                edit_table_start_time()
+                #table_status_display()
+            tables[i].display_start = str(tables[i].start_time.hour).zfill(2) + ":" + str(tables[i].start_time.minute).zfill(2)
+        else:
+            print("Table is Unoccupied.  Please assign the table first.")
+            input("Press enter to continue")
+    except:
+        print("Invailid enter")
         input("Press enter to continue")
 
 def submit_daily_report():
+
+    #daily_report = str(datetime.datetime.now().month).zfill(2) + "-" + str(datetime.datetime.now().day).zfill(2) + "-" + str(datetime.datetime.now().year) + '.txt'
+    #with open(daily_report) as email:
     pass
 
+
+
+
 def change_rate():
-    global rate
-    rate = float(input("Enter the new hourly rate: "))
-    print(f"The current rate is: ${rate:,.2f} per hour.")
-    return(rate)
+    try:
+        global rate
+        rate = float(input("Enter the new hourly rate: "))
+        print(f"The current rate is: ${rate:,.2f} per hour.")
+        return(rate)
+    except(ValueError):
+        print("Please enter a Dollar value")
+        input("Press enter to continue")
+        change_rate()
 
 def upper_frame():
     print(" " *5 + "#" * cell + " " *5 + "#" * cell + " " *5 + "#" * cell + " " *5 + "#" *cell)
@@ -182,10 +208,10 @@ def menu():
     print(' 1) Assign Table ')
     print(' 2) Checkout Table ')
     print(' 3) Edit Start time')
-    print(' 4) Submit Daily report NOT WORKING')
-    print(' 5) Change Hourly Rate')
+ #   print(' 4) Submit Daily report NOT WORKING')
+    print(' 4) Change Hourly Rate')
     print('\n')
-    print(' R) Refresh')
+#    print(' R) Refresh')
     print('\n')
     print(' Q) EXIT')
     action = input()
@@ -199,13 +225,13 @@ def menu():
     elif action == '3':
         edit_table_start_time()
         table_status_display()
+ #   elif action == '4':
+ #       pass
     elif action == '4':
-        pass
-    elif action == '5':
         change_rate()
         table_status_display()
-    elif action.casefold() == 'r':
-        table_status_display() 
+#    elif action.casefold() == 'r':
+#        table_status_display() 
     elif action.casefold() == 'q':
         exit
     else:
@@ -214,5 +240,5 @@ def menu():
 pool_hall_setup()
 table_status_display()
 
-print(input())
+
 
