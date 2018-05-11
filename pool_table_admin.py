@@ -1,7 +1,7 @@
 import os
 import datetime
 import time
-from colorama import Fore, Style
+from colorama import Fore, Style, Back
 import colorama
 
 
@@ -9,12 +9,12 @@ os.system('clear')
 
 tables = []
 rate = 30.00
-cell = 18
+cell = 6
 
 class Table:
     def __init__(self,table_number):
         self.table_number = table_number
-        self.table_status = (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} ')
+        self.table_status = ' NOT OCCUPIED '
         self.start_time = '     '
         self.table_start = '     '
         self.display_start = '     '
@@ -45,8 +45,8 @@ def assign_table():
     try:
         active_table = int(input("Select table Number: "))
         i = active_table - 1
-        if tables[i].table_status == (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} '):
-            tables[i].table_status = (f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}')
+        if tables[i].table_status == ' NOT OCCUPIED ':
+            tables[i].table_status = '   OCCUPIED   '
             tables[i].start_time =  datetime.datetime.now()
             tables[i].display_start = tables[i].start_time.strftime('%H:%M')
             #new_time = datetime.datetime.strptime(input('specify time in HH:MM 24h format: '), '%H:%M' ).time()
@@ -63,9 +63,9 @@ def check_out_table():
     try:
         active_table = int(input("Select table Number: "))
         i = active_table - 1
-        if tables[i].table_status == (f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}'):
+        if tables[i].table_status == '   OCCUPIED   ':
             total_charge(i)
-            tables[i].table_status = (f'{Fore.GREEN} NOT OCCUPIED{Style.RESET_ALL} ')
+            tables[i].table_status = ' NOT OCCUPIED '
             tables[i].display_start = '     '
         else:
             print("Table is Unoccupied.  Please assign the table first.")
@@ -128,7 +128,7 @@ def edit_table_start_time():
         print("Invailid table number")
         input("Press enter to continue")
     try:
-        if tables[i].table_status ==(f'{Fore.RED}   OCCUPIED   {Style.RESET_ALL}'):
+        if tables[i].table_status =='   OCCUPIED   ':
             new_time = datetime.datetime.strptime(input('specify time in HH:MM 24h format: '), '%H:%M' ).time()
             tables[i].start_time = datetime.datetime.combine(datetime.date.today(), new_time)
             if tables[i].start_time > datetime.datetime.now():
@@ -165,39 +165,39 @@ def change_rate():
         change_rate()
 
 def upper_frame():
-    print(" " *5 + "#" * cell + " " *5 + "#" * cell + " " *5 + "#" * cell + " " *5 + "#" *cell)
+    print(f" " *5 + f'{Back.GREEN}'"██" + "-"  * cell + '██' +"-"  * cell +'██'  f'{Style.RESET_ALL}' + f" " *5 + f'{Back.GREEN}'"██" + "-"  * cell + '██' +"-"  * cell +'██'  f'{Style.RESET_ALL}' + f" " *5 + f'{Back.GREEN}'"██" + "-"  * cell + '██' +"-"  * cell +'██'  f'{Style.RESET_ALL}' + f" " *5 + f'{Back.GREEN}'"██" + "-"  * cell + '██' +"-"  * cell +'██'  f'{Style.RESET_ALL}')
 
 def table_status_display():
     os.system('clear')
-    print()
+    print('')
     print(f"The current rate is: ${rate:,.2f} per hour.")
     print()
     print()
-    print()
+    print('')
     upper_frame()
-    print(" " * 5 + "#    Table 01    #" +" " * 5 + "#    Table 02    #" +" " * 5 + "#    Table 03    #" +" " * 5 + "#    Table 04    #")
-    print(" " * 5 + f"# {tables[0].table_status} #" +" " * 5 + f"# {tables[1].table_status} #" +" " * 5 + f"# {tables[2].table_status} #" +" " * 5 + f"# {tables[3].table_status} #")
-    print(" " * 5 + f'# Start: {tables[0].display_start}   #' +" " * 5 + f'# Start: {tables[1].display_start}   #' +" " * 5 + f'# Start: {tables[2].display_start}   #' +" " * 5 + f'# Start: {tables[3].display_start}   #')
+    print(" " * 5 + f"{Back.GREEN}|    Table 01    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 02    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 03    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 04    |{Style.RESET_ALL}")
+    print(" " * 5 + f"{Back.GREEN}| {tables[0].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[1].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[2].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[3].table_status} |{Style.RESET_ALL}")
+    print(" " * 5 + f'{Back.GREEN}|  Start: {tables[0].display_start}  |{Style.RESET_ALL}' +" " * 5 + f"{Back.GREEN}|  Start: {tables[1].display_start}  |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|  Start: {tables[2].display_start}  |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|  Start: {tables[3].display_start}  |{Style.RESET_ALL}")
 #    print(" " * 5 + f'# Played:{tables[0].time_played_hours}:{tables[0].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[1].time_played_hours}:{tables[1].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[2].time_played_hours}:{tables[2].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[3].time_played_hours}:{tables[3].time_played_minutes}   #')    
     upper_frame()
     print()
     print()
     upper_frame()
-    print(" " * 5 + "#    Table 05    #" +" " * 5 + "#    Table 06    #" +" " * 5 + "#    Table 07    #" +" " * 5 + "#    Table 08    #")
-    print(" " * 5 + f"# {tables[4].table_status} #" +" " * 5 + f"# {tables[5].table_status} #" +" " * 5 + f"# {tables[6].table_status} #" +" " * 5 + f"# {tables[7].table_status} #")
-    print(" " * 5 + f'# Start: {tables[4].display_start}   #' +" " * 5 + f'# Start: {tables[5].display_start}   #' +" " * 5 + f'# Start: {tables[6].display_start}   #' +" " * 5 + f'# Start: {tables[7].display_start}   #')
+    print(" " * 5 + f"{Back.GREEN}|    Table 05    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 06    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 07    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 08    |{Style.RESET_ALL}")
+    print(" " * 5 + f"{Back.GREEN}| {tables[4].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[5].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[6].table_status} |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}| {tables[7].table_status} |{Style.RESET_ALL}")
+    print(" " * 5 + f'{Back.GREEN}|  Start: {tables[4].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[5].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[6].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[7].display_start}  |{Style.RESET_ALL}')
 #    print(" " * 5 + f'# Played:{tables[4].time_played_hours}:{tables[4].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[5].time_played_hours}:{tables[5].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[6].time_played_hours}:{tables[6].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[7].time_played_hours}:{tables[7].time_played_minutes}   #')
     upper_frame()
     print() 
     print()
     upper_frame()
-    print(" " * 5 + "#    Table 09    #" +" " * 5 + "#    Table 10    #" +" " * 5 + "#    Table 11    #" +" " * 5 + "#    Table 12    #")
-    print(" " * 5 + f"# {tables[8].table_status} #" +" " * 5 + f"# {tables[9].table_status} #" +" " * 5 + f"# {tables[10].table_status} #" +" " * 5 + f"# {tables[11].table_status} #")
-    print(" " * 5 + f'# Start: {tables[8].display_start}   #' +" " * 5 + f'# Start: {tables[9].display_start}   #' +" " * 5 + f'# Start: {tables[10].display_start}   #' +" " * 5 + f'# Start: {tables[11].display_start}   #')    
+    print(" " * 5 + f"{Back.GREEN}|    Table 09    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 10    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 11    |{Style.RESET_ALL}" +" " * 5 + f"{Back.GREEN}|    Table 12    |{Style.RESET_ALL}")    
+    print(" " * 5 + f'{Back.GREEN}| {tables[8].table_status} |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}| {tables[9].table_status} |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}| {tables[10].table_status} |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}| {tables[11].table_status} |{Style.RESET_ALL}')
+    print(" " * 5 + f'{Back.GREEN}|  Start: {tables[8].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[9].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[10].display_start}  |{Style.RESET_ALL}' +" " * 5 + f'{Back.GREEN}|  Start: {tables[11].display_start}  |{Style.RESET_ALL}')    
 #    print(" " * 5 + f'# Played:{tables[8].time_played_hours}:{tables[8].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[9].time_played_hours}:{tables[9].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[10].time_played_hours}:{tables[10].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[11].time_played_hours}:{tables[11].time_played_minutes}   #')
     upper_frame()
     print()
-    print()
+    print('')
     menu()
 
 def menu():
