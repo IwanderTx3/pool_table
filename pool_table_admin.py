@@ -162,7 +162,7 @@ def table_status_display():
     print(" " * 5 + f'# Start: {tables[4].display_start}   #' +" " * 5 + f'# Start: {tables[5].display_start}   #' +" " * 5 + f'# Start: {tables[6].display_start}   #' +" " * 5 + f'# Start: {tables[7].display_start}   #')
 #    print(" " * 5 + f'# Played:{tables[4].time_played_hours}:{tables[4].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[5].time_played_hours}:{tables[5].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[6].time_played_hours}:{tables[6].time_played_minutes}   #' +" " * 5 + f'# Played:{tables[7].time_played_hours}:{tables[7].time_played_minutes}   #')
     upper_frame()
-    print()
+    print() 
     print()
     upper_frame()
     print(" " * 5 + "#    Table 09    #" +" " * 5 + "#    Table 10    #" +" " * 5 + "#    Table 11    #" +" " * 5 + "#    Table 12    #")
